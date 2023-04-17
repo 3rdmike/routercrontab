@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM alpine:latest
 
 # Add the script to the Docker Image
 # ADD get_date.sh /root/get_date.sh
@@ -8,12 +8,8 @@ FROM ubuntu:latest
 
 WORKDIR /project
 
-# Install Cron
-RUN apt-get update
-RUN apt-get -y install software-properties-common
-RUN add-apt-repository universe
-RUN apt-get -y install cron wget tar
-RUN apt-get -y install python3-pip
+RUN apk add --no-cache curl wget tar python3 py3-pip gcompat
+
 
 RUN pip3 install minio
 RUN wget https://downloads-openshift-console.apps.silver.devops.gov.bc.ca/amd64/linux/oc.tar
@@ -29,4 +25,4 @@ COPY upload_logs.py .
 # RUN crontab -l | { cat; echo "* * * * * bash /root/get_date.sh"; } | crontab -
 
 # Run the command on container startup
-ENTRYPOINT ["cron", "-f"]    
+CMD ["/usr/sbin/crond", "-f"]  
