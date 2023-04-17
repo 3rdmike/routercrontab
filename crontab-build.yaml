@@ -1,0 +1,36 @@
+
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: crontab-minio-build
+spec:
+  source:
+    type: Dockerfile
+    dockerfile: >-
+      FROM ubuntu:latest
+
+      # Add the script to the Docker Image
+      # ADD get_date.sh /root/get_date.sh
+
+      # Give execution rights on the cron scripts
+      # RUN chmod 0644 /root/get_date.sh
+
+      # Install Cron
+      RUN add-apt-repository ppa:deadsnakes/ppa
+      RUN apt-get update
+      RUN apt-get -y install cron
+      RUN apt-get -y install software-properties-common
+      RUN apt-get install python3.8
+
+      # Add the cron job
+      # RUN crontab -l | { cat; echo "* * * * * bash /root/get_date.sh"; } | crontab -
+
+      # Run the command on container startup
+      CMD cron      
+      
+  strategy:
+    type: Docker
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'maven-webapp:latest'
