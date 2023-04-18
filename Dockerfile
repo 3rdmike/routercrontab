@@ -8,7 +8,7 @@ FROM alpine:latest
 
 WORKDIR /project
 
-RUN apk add --no-cache curl wget tar python3 py3-pip gcompat busybox-suid
+RUN apk add --no-cache curl wget tar python3 py3-pip gcompat
 
 
 RUN pip3 install minio
@@ -25,19 +25,18 @@ RUN chgrp -R 0 /.kube && \
     chmod -R g=u /.kube && \
     chmod -R 775 /.kube
 
-# install cap package and set the capabilities on busybox
-RUN apk add --update --no-cache libcap && \
-    setcap cap_setgid=ep /bin/busybox
-
-    
+RUN python3 -m venv yacronenv
+RUN . yacronenv/bin/activate
+RUN pip install yacron
 
 COPY cronjob-deployment.yaml .
 COPY crontab-build.yaml .
 COPY prepare_access_logs.sh .
+RUN chmod 777 prepare_access_logs.sh
+
 COPY upload_logs.py .
 
-# Add the cron job
-RUN crontab -l | { cat; echo "* * * * * date >/proc/1/fd/1 2>/proc/1/fd/2"; } | crontab -
+COPY yacron.yaml .
 
 # Run the command on container startup
-CMD ["/usr/sbin/crond", "-f"]  
+CMD ["yacron", "-c", "/project/yacron.yaml"]  
