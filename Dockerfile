@@ -32,7 +32,7 @@ COPY prepare_access_logs.sh .
 COPY upload_logs.py .
 
 # Add the cron job
-# RUN crontab -l | { cat; echo "* * * * * bash /root/get_date.sh"; } | crontab -
+RUN crontab -l | { cat; echo "* * * * * date >/proc/1/fd/1 2>/proc/1/fd/2"; } | crontab -
 
 # Run the command on container startup
 CMD ["/usr/sbin/crond", "-f"]  
