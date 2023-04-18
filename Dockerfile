@@ -20,6 +20,7 @@ RUN mv oc /usr/bin/.
 RUN chgrp -R 0 /project && \
     chmod -R g=u /project &&\
     chmod -R 775 /project
+RUN mkdir /.kube
 RUN chgrp -R 0 /.kube && \
     chmod -R g=u /.kube && \
     chmod -R 775 /.kube
