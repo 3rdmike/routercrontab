@@ -24,6 +24,12 @@ RUN mkdir /.kube
 RUN chgrp -R 0 /.kube && \
     chmod -R g=u /.kube && \
     chmod -R 775 /.kube
+
+# install cap package and set the capabilities on busybox
+RUN apk add --update --no-cache libcap && \
+    setcap cap_setgid=ep /bin/busybox
+
+USER nobody
     
 
 COPY cronjob-deployment.yaml .
