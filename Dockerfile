@@ -22,7 +22,7 @@ RUN chgrp -R 0 /project && \
     chmod -R 775 /project
 RUN chgrp -R 0 /.kube && \
     chmod -R g=u /.kube && \
-    chmod -R 775 //kube
+    chmod -R 775 /.kube
     
 
 COPY cronjob-deployment.yaml .
