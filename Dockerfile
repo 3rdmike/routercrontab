@@ -29,7 +29,6 @@ RUN chgrp -R 0 /.kube && \
 RUN apk add --update --no-cache libcap && \
     setcap cap_setgid=ep /bin/busybox
 
-USER nobody
     
 
 COPY cronjob-deployment.yaml .
