@@ -8,7 +8,7 @@ FROM alpine:latest
 
 WORKDIR /project
 
-RUN apk add --no-cache curl wget tar python3 py3-pip gcompat
+RUN apk add --no-cache curl wget tar python3 py3-pip gcompat busybox-suid
 
 
 RUN pip3 install minio

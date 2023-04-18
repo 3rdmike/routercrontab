@@ -16,8 +16,33 @@ spec:
     spec:
       containers:
       - name: cronjob
-        image: tigpt/cronjobs
-        securityContext:
-          runAsUser: 0
+        image: image-registry.openshift-image-registry.svc:5000/1475a9-test/router-cronjob-test
         ports:
         - containerPort: 80
+        env:
+        - name: OC_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: pipeline-token-zcqq4
+              key: token
+        - name: MINIO_URL
+          valueFrom:
+            secretKeyRef:
+              name: cronjob-secret
+              key: minio_url
+        - name: BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: cronjob-secret
+              key: bucket
+        - name: ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-router-datastore-test
+              key: minioAccessKey
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-router-datastore-test
+              key: minioSecretKey
+

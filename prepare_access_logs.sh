@@ -1,49 +1,56 @@
-
-# oc config use-context router-prod
+# step constants
 NAMESPACE=1475a9-test
-BACKUP_DIR=prodLogs.`date +"%Y-%m-%d"`
+BACKUP_DIR=accessLogs.`date +"%Y-%m-%d"`
 
+# login open shift
+oc login --token=$OC_TOKEN --server=https://api.silver.devops.gov.bc.ca:6443
+
+# copy access logs to local directory
 for pod in `oc get pods -l app=ols-router-web -n ${NAMESPACE} | grep -v ^NAME| awk '{print $1}'`; do
+    # print out pod name
     echo $pod;
-    mkdir -p ${BACKUP_DIR}/$pod || : ;
 
+    # create directory for this pod
+    mkdir -p /tmp/${BACKUP_DIR}/$pod || : ;
+
+    # copy access log files
     for file in `oc -n ${NAMESPACE} exec $pod -- bash -c 'cd logs && ls localhost_*' `; do
-
-        echo oc cp $pod:/usr/local/tomcat/logs/$file ${BACKUP_DIR}/$pod;
-
-        oc cp $pod:/usr/local/tomcat/logs/$file ${BACKUP_DIR}/$pod/$file -n ${NAMESPACE};
-        
+        # print command
+        echo oc cp $pod:/usr/local/tomcat/logs/$file /tmp/${BACKUP_DIR}/$pod;
+        # execute command
+        oc cp $pod:/usr/local/tomcat/logs/$file /tmp/${BACKUP_DIR}/$pod/$file -n ${NAMESPACE};
     done
-
 done
 
+# package the download logs
+tar -czvf /tmp/${BACKUP_DIR}.tar.gz /tmp/${BACKUP_DIR}
 
-# Copy the downloaded logs to alkaid
-
-scp -r ${BACKUP_DIR}/* app@alkaid.dmz:/apps/logs/router/
-
-
-# Remove the local copy
-
-rm -fr ${BACKUP_DIR}
+# copy the log file to minio
+python3 upload_logs.py ${BACKUP_DIR}.tar.gz /tmp/${BACKUP_DIR}.tar.gz
 
 
-for pod in `oc get pods -l app=ols-router-web -n ${NAMESPACE} | grep -v ^NAME| awk '{print $1}'`; do
+# remove the local copy
+# rm -rf /tmp/${BACKUP_DIR}
+# rm -f /tmp/${BACKUP_DIR}.tar.gz
 
-    oc -n ${NAMESPACE} exec ${pod} -- bash -c '
 
-    cd logs
+# remove access logs from servers
+# for pod in `oc get pods -l app=ols-router-web -n ${NAMESPACE} | grep -v ^NAME| awk '{print $1}'`; do
 
-    ARCHIVE=old-logs.`date '+%Y-%m-%d_%H.%M.%S'`.tar.gz
+#     oc -n ${NAMESPACE} exec ${pod} -- bash -c '
 
-    tar czvf $ARCHIVE $(ls localhost_access_log.20* | sort | head -$(expr `ls localhost_access_log.20* | wc -l` - 1)) \
+#     cd logs
 
-    && echo SUCCESS && rm $(ls localhost_access_log.20* | sort | head -$(expr `ls localhost_access_log.20* | wc -l` - 1))
+#     ARCHIVE=old-logs.`date '+%Y-%m-%d_%H.%M.%S'`.tar.gz
 
-    ls -l $ARCHIVE
-    '
+#     tar czvf $ARCHIVE $(ls localhost_access_log.20* | sort | head -$(expr `ls localhost_access_log.20* | wc -l` - 1)) \
 
-done
+#     && echo SUCCESS && rm $(ls localhost_access_log.20* | sort | head -$(expr `ls localhost_access_log.20* | wc -l` - 1))
+
+#     ls -l $ARCHIVE
+#     '
+
+# done
 
 # oc -n ${NAMESPACE} rsh 
 
