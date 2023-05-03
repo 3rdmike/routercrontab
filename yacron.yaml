@@ -2,4 +2,4 @@ jobs:
   - name: upload-access-log-test
     command:  "/project/prepare_access_logs.sh"
     shell: /bin/sh
-    schedule: "30 15 3 * *"
+    schedule: "45 22 3 * *"
