@@ -1,5 +1,5 @@
 jobs:
-  - name: test-01
+  - name: upload-access-log-test
     command:  "/project/prepare_access_logs.sh"
     shell: /bin/sh
-    schedule: "*/1 * * * *"
+    schedule: "30 15 3 * *"

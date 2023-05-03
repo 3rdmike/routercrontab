@@ -1,5 +1,3 @@
-echo "evoked"
-exit 0
 # step constants
 NAMESPACE=1475a9-test
 BACKUP_DIR=accessLogs.`date +"%Y-%m-%d"`
