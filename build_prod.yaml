@@ -1,8 +1,8 @@
 kind: BuildConfig
 apiVersion: build.openshift.io/v1
 metadata:
-  name: router-cronjob-build
-  namespace: 1475a9-prod
+  name: router-cronjob-prod-build
+  namespace: 1475a9-tools
 spec:
   runPolicy: Serial 
   source: 
