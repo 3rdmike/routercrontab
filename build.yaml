@@ -1,21 +1,17 @@
-kind: "BuildConfig"
-apiVersion: "v1"
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
 metadata:
-  name: "router-cronjob-build"
+  name: router-cronjob-build
   namespace: 1475a9-prod
 spec:
-  runPolicy: "Serial" 
+  runPolicy: Serial 
   source: 
     git:
-      uri: "https://github.com/3rdmike/routercrontab.git"
-      ref: "prod"
+      uri: 'https://github.com/3rdmike/routercrontab.git'
+      ref: prod
   output: 
     to:
       kind: ImageStreamTag
       name: "router-cronjob-prod:latest"
   strategy:
    type: Docker
-   dockerStrategy:
-      from:
-         kind: "ImageStreamTag"
-         name: "ubuntu:latest"
