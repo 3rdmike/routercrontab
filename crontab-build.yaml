@@ -3,6 +3,7 @@ apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
   name: crontab-minio-build
+  namespace: 1475a9-prod
 spec:
   source:
     type: Dockerfile

@@ -29,8 +29,6 @@ RUN python3 -m venv yacronenv
 RUN . yacronenv/bin/activate
 RUN pip install yacron
 
-COPY cronjob-deployment.yaml .
-COPY crontab-build.yaml .
 COPY prepare_access_logs.sh .
 RUN chmod 777 prepare_access_logs.sh
 

@@ -1,5 +1,5 @@
 # step constants
-NAMESPACE=1475a9-test
+NAMESPACE=1475a9-prod
 BACKUP_DIR=accessLogs.`date +"%Y-%m-%d"`
 
 # login open shift
