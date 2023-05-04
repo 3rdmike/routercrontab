@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - name: cronjob
-        image: image-registry.openshift-image-registry.svc:5000/1475a9-test/router-cronjob-test
+        image: image-registry.openshift-image-registry.svc:5000/1475a9-prod/router-cronjob-prod
         ports:
         - containerPort: 80
         env:
         - name: OC_TOKEN
           valueFrom:
             secretKeyRef:
-              name: pipeline-token-zcqq4
+              name: pipeline-token-jbr6q
               key: token
         - name: MINIO_URL
           valueFrom:
@@ -38,11 +38,11 @@ spec:
         - name: ACCESS_KEY
           valueFrom:
             secretKeyRef:
-              name: minio-router-datastore-test
+              name: minio-router-datastore-prod
               key: minioAccessKey
         - name: SECRET_KEY
           valueFrom:
             secretKeyRef:
-              name: minio-router-datastore-test
+              name: minio-router-datastore-prod
               key: minioSecretKey
 
