@@ -7,10 +7,9 @@ FROM alpine:latest
 # RUN chmod 0644 /root/get_date.sh
 
 WORKDIR /project
-
-RUN apk add --no-cache curl wget tar python3 py3-pip gcompat
-
-
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache nghttp2 curl wget tar python3 py3-pip gcompat
 RUN pip3 install minio
 RUN wget https://downloads-openshift-console.apps.silver.devops.gov.bc.ca/amd64/linux/oc.tar
 RUN tar -xvf oc.tar
